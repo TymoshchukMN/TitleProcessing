@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\DBConfig.cs" />
+    <Compile Include="DB\VerifiableDB.cs" />
     <Compile Include="Encription\Decrypt.cs" />
     <Compile Include="Json\MailConfig.cs" />
     <Compile Include="Mail\Email.cs" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
