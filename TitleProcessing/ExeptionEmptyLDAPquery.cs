@@ -1,13 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TitleProcessing
 {
-    public class ExeptionEmptyLDAPquery:Exception
+    public class ExeptionEmptyLDAPquery : Exception
     {
+        public ExeptionEmptyLDAPquery()
+        {
+        }
+
+        public ExeptionEmptyLDAPquery(string message)
+            : base(message)
+        {
+        }
 
         public override string Message
         {
@@ -16,6 +20,5 @@ namespace TitleProcessing
                 return "LDAP query returned empty";
             }
         }
-
     }
 }

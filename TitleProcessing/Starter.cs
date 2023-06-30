@@ -27,12 +27,12 @@
 
             try
             {
-                ldap.GetAllUsers(currentTitlesList, log);
+                ldap.GetAllUsers(currentTitlesList);
             }
             catch (ExeptionEmptyLDAPquery ex)
             {
-                string message = string.Format("Error\n{0}"
-                    , ex.Message);
+                string message = string.Format(
+                    $"Error\n{ex.Message}");
 
                 log.WriteEvent(ex.Message);
                 email.SendMail(message);
@@ -50,8 +50,8 @@
                 catch (Exception ex)
                 {
                     log.WriteEvent(ex.Message);
-                    string message = string.Format("Error. Cannont connect to DB\n{0}"
-                        , ex.Message);
+                    string message = string.Format(
+                        $"Error. Cannont connect to DB\n{ex.Message}");
 
                     log.WriteEvent(ex.Message);
                     email.SendMail(message);
@@ -75,10 +75,10 @@
 
                     while (data.Read())
                     {
-                        string row = string.Format("{0};{1};{2}"
-                       , data.GetString(0)
-                       , data.GetString(1)
-                       , data.GetString(2));
+                        string row = string.Format(
+                            $"{data.GetString(0)};" +
+                            $"{data.GetString(1)};" +
+                            $"{data.GetString(2)}");
 
                         userWithChangedTitles.Add(row);
                         log.WriteEvent(row);
@@ -88,13 +88,11 @@
                     // "A command is already in progress:"
                     data.Close();
 
-
                     string[] usersTbl = userWithChangedTitles.ToArray();
-                    pgDB.CheckAccessToSystems(connection
-                                , usersTbl);
+                    pgDB.CheckAccessToSystems(
+                        connection, usersTbl);
 
                     email.ProcessEmailBody(usersTbl);
-
                 }
                 else
                 {

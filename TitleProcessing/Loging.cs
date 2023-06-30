@@ -1,20 +1,20 @@
 ﻿//////////////////////////////////////////
 // Author : Tymoshchuk Maksym
 // Created On : 12/04/2023
-// Last Modified On : 
+// Last Modified On :
 // Description: Logging software working
 // Project: TitleProcessing
 //////////////////////////////////////////
 
 using System;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace TitleProcessing
 {
     internal class Loging
     {
-        const string LOG_FILE_PATH = "C:\\swsetup\\TitleProcessing.log";
+        const string LogfilePath = "C:\\swsetup\\TitleProcessing.log";
         private StreamWriter _sw;
 
         public Loging()
@@ -28,34 +28,33 @@ namespace TitleProcessing
         }
 
         /// <summary>
-        /// Check if log-file exist, and create if it doesn`t
+        /// Write Event to log-file.
         /// </summary>
-        private void CreateLogFile()
+        /// <param name="message">
+        /// Event for logging.
+        /// </param>
+        public void WriteEvent(string message)
         {
-            if (File.Exists(LOG_FILE_PATH))
-            {
-                File.WriteAllText(LOG_FILE_PATH, string.Empty, Encoding.UTF8);
-                _sw = new StreamWriter(LOG_FILE_PATH);                
-            }
-            else
-            {
-                File.Create(LOG_FILE_PATH);
-                _sw = new StreamWriter(LOG_FILE_PATH);
-            }
+            string log = string.Format("{0}\t{1}", DateTime.Now, message);
+
+            _sw.WriteLine(log, true, Encoding.UTF8);
         }
 
         /// <summary>
-        /// Write Event to log-file
+        /// Check if log-file exist, and create if it doesn`t.
         /// </summary>
-        /// <param name="message">
-        /// Event for logging
-        /// </param>
-        public void WriteEvent(string message) 
+        private void CreateLogFile()
         {
-            string log = string.Format("{0}\t{1}",DateTime.Now, message);
-
-            _sw.WriteLine(log,true,Encoding.UTF8);
-            
+            if (File.Exists(LogfilePath))
+            {
+                File.WriteAllText(LogfilePath, string.Empty, Encoding.UTF8);
+                _sw = new StreamWriter(LogfilePath);
+            }
+            else
+            {
+                File.Create(LogfilePath);
+                _sw = new StreamWriter(LogfilePath);
+            }
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿//////////////////////////////////////////
 // Author : Tymoshchuk Maksym
 // Created On : 11/04/2023
-// Last Modified On : 
+// Last Modified On :
 // Description: Work with LDAP
 // Project: TitleProcessing
 //////////////////////////////////////////
 
+using System.Collections;
 using System.Collections.Generic;
 using System.DirectoryServices;
-
 
 namespace TitleProcessing
 {
@@ -17,7 +17,7 @@ namespace TitleProcessing
         #region FIELDS
 
         /// <summary>
-        /// Current domain name
+        /// Current domain name.
         /// </summary>
         private string _domainName;
 
@@ -35,25 +35,12 @@ namespace TitleProcessing
         #region METHODS
 
         /// <summary>
-        /// Ger root domain
-        /// </summary>
-        /// <returns>
-        /// Domain name
-        /// </returns>
-        private string GetCurrentDomainPath()
-        {
-            DirectoryEntry de = new DirectoryEntry("LDAP://RootDSE");
-
-            return "LDAP://" + de.Properties["defaultNamingContext"][0].ToString();
-        }
-
-        /// <summary>
-        /// Get users from active directory
+        /// Get users from active directory.
         /// </summary>
         /// <param name="currentTitles">
-        /// List for filleing titles and logins
+        /// List for filleing titles and logins.
         /// </param>
-        public void GetAllUsers(List<string> currentTitles, Loging log)
+        public void GetAllUsers(List<string> currentTitles)
         {
             SearchResultCollection results;
             DirectorySearcher directorySearcher;
@@ -61,29 +48,38 @@ namespace TitleProcessing
 
             directorySearcher = new DirectorySearcher(directoryEntry);
 
-            // 512 -identifier, than account is enabled           
+            // 512 -identifier, than account is enabled
             directorySearcher.Filter = "(&(&(&(&(&(&(objectCategory=user)" +
                 "(userAccountControl=512)(&(Title=*))))))))";
 
             results = directorySearcher.FindAll();
-                       
+
             if (results.Count == 0)
             {
-                throw new ExeptionEmptyLDAPquery();                       
-
-            }         
+                throw new ExeptionEmptyLDAPquery("LDAP query returned empty");
+            }
 
             foreach (SearchResult sr in results)
             {
-                currentTitles.Add
-                (
-                    string.Format("{0};{1}"
-                   , sr.Properties["sAMAccountName"][0].ToString()
-                   , sr.Properties["title"][0].ToString())
-                );
+                currentTitles.Add(
+                    string.Format(
+                        $"{sr.Properties["sAMAccountName"][0]};" +
+                        $"{sr.Properties["title"][0]}"));
             }
         }
 
+        /// <summary>
+        /// Ger root domain.
+        /// </summary>
+        /// <returns>
+        /// Domain name.
+        /// </returns>
+        private string GetCurrentDomainPath()
+        {
+            DirectoryEntry de = new DirectoryEntry("LDAP://RootDSE");
+
+            return "LDAP://" + de.Properties["defaultNamingContext"][0].ToString();
+        }
         #endregion METHODS
     }
 }

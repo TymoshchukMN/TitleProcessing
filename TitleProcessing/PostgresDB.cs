@@ -6,36 +6,53 @@
 // Project: TitleProcessing
 //////////////////////////////////////////
 
-
 using System;
 using System.Collections.Generic;
-using Npgsql;
 using System.Data;
+using Npgsql;
 
 namespace TitleProcessing
 {
     internal class PostgresDB
     {
-
-        const string SERVER = "192.168.220.102";
-        const ushort PORT = 5432;
-        const string DB_NAME = "Access_list";
-        const string USER_NAME = "access_mng";
+        const string Server = "192.168.220.102";
+        const ushort Port = 5432;
+        const string DBname = "Access_list";
+        const string UsetName = "access_mng";
 
         #region FIELDS
 
-        private string _connectionString;
-        private string[] _DBtables = { "1C7Dymerka", "1C7Shops", "1C7Torg"
-                , "Zoom"};
+        private readonly string[] _dBtables =
+        {
+            "1C7Dymerka",
+            "1C7Shops",
+            "1C7Torg",
+            "Zoom",
+        };
 
+        private string _connectionString;
         #endregion FIELDS
 
+        #region CTORs
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PostgresDB"/> class.
+        /// Default ctor.
+        /// </summary>
+        public PostgresDB()
+        {
+            _connectionString = string.Format(
+                    $"Server={Server};" +
+                    $"Username={UsetName};" +
+                    $"Database={DBname};" +
+                    $"Port={Port};" +
+                    $"Password={string.Empty}");
+        }
+
+        #endregion CTORs
 
         #region PROPERTIES
 
-        /// <summary>
-        /// Get DB-connection string
-        /// </summary>
         public string ConnectionString
         {
             get
@@ -46,31 +63,8 @@ namespace TitleProcessing
 
         #endregion PROPERTIES
 
-        #region CTORs
-
-        /// <summary>
-        /// Default ctor
-        /// </summary>
-        public PostgresDB()
-        {
-            _connectionString = string.Format(
-                    "Server={0};Username={1};Database={2};Port={3};Password={4}",
-                    SERVER,
-                    USER_NAME,
-                    DB_NAME,
-                    PORT,
-                    string.Empty);           
-        }
-
-
-        #endregion CTORs
-
-
         #region METHODS
 
-        /// <summary>
-        /// Processing old titles in DB
-        /// </summary>
         public void ProcessingOldTitles(NpgsqlConnection connection)
         {
             NpgsqlCommand npgsqlCommand = connection.CreateCommand();
@@ -90,14 +84,9 @@ namespace TitleProcessing
             npgsqlCommand.ExecuteNonQuery();
         }
 
-        /// <summary>
-        /// Processing current Titles
-        /// </summary>
-        /// <param name="connection">
-        /// DB-connection
-        /// </param>
-        public void ProcessingNewTitles(NpgsqlConnection connection
-                , List<string> currentTitlesList)
+        public void ProcessingNewTitles(
+            NpgsqlConnection connection,
+            List<string> currentTitlesList)
         {
             NpgsqlCommand npgsqlCommand = connection.CreateCommand();
 
@@ -111,26 +100,24 @@ namespace TitleProcessing
             for (int i = 0; i < currentTitlesList.Count; ++i)
             {
                 string samAccountName = currentTitlesList[i].Split(';')[0];
-                string title = currentTitlesList[i].Split(';')[1].Replace("'", "`");
+                string title =
+                    currentTitlesList[i].Split(';')[1].Replace("'", "`");
 
                 npgsqlCommand.CommandText
-                    = string.Format("INSERT INTO titles VALUES ('{0}','{1}');"
-                    , samAccountName, title);
+                    = string.Format(
+                        $"INSERT INTO titles VALUES " +
+                        $"('{samAccountName}','{title}');");
 
                 npgsqlCommand.ExecuteNonQuery();
             }
+
             npgsqlCommand.CommandText = "COMMIT;";
             npgsqlCommand.ExecuteNonQuery();
-        }                
+        }
 
-        /// <summary>
-        /// Compare old and new titles
-        /// </summary>
-        /// <param name="connection">
-        /// DB-connection
-        /// </param>
-        public bool CompareTitles(NpgsqlConnection connection
-                , out NpgsqlDataReader data)
+        public bool CompareTitles(
+            NpgsqlConnection connection,
+            out NpgsqlDataReader data)
         {
             NpgsqlCommand npgsqlCommand = connection.CreateCommand();
 
@@ -154,55 +141,54 @@ namespace TitleProcessing
             npgsqlCommand.CommandText = "SELECT * FROM tmpTbl;";
 
             data = npgsqlCommand.ExecuteReader();
-            
+
             return data.HasRows;
-           
         }
 
         /// <summary>
-        /// Check access to additional systems
+        /// Check access to additional systems.
         /// </summary>
         /// <param name="connection">
-        /// DB-connector
+        /// DB-connector.
         /// </param>
         /// <param name="usersTbl">
-        /// Table with user`s information
+        /// Table with user`s information.
         /// </param>
-        public void CheckAccessToSystems(NpgsqlConnection connection
-            , string [] usersTbl)
+        public void CheckAccessToSystems(
+            NpgsqlConnection connection,
+            string[] usersTbl)
         {
             NpgsqlCommand npgsqlCommand = connection.CreateCommand();
             NpgsqlDataReader data;
 
-           
-
-            string samaccountname = usersTbl[0].Substring(0
-                    , usersTbl[0].IndexOf(";"));
+            string samaccountname = usersTbl[0].Substring(
+                0,
+                usersTbl[0].IndexOf(";"));
 
             for (int j = 0; j < usersTbl.Length; j++)
             {
                 string systemsWithAccess = string.Empty;
 
-                for (ushort i = 0; i < _DBtables.Length; ++i)
+                for (ushort i = 0; i < _dBtables.Length; ++i)
                 {
                     string command = string.Format(
-                    @"SELECT CASE
-                    WHEN
-	                    (
-	                    (SELECT EXISTS
-		                    (SELECT *
-		                    FROM ""{0}""
-		                    WHERE samaccountname = '{1}') = TRUE
-	                    )
-	                AND
-	                    (
-		                    SELECT ""isEnable""
-		                    FROM  ""{0}""
-		                    WHERE samaccountname ='{1}') = TRUE
-	                    ) 
-                    THEN 'exist'
-                    ELSE 'NOT exist'
-                    END;", _DBtables[i], samaccountname);
+                    $"SELECT CASE" +
+                    $"WHEN" +
+                    $"(" +
+                    $"  (SELECT EXISTS" +
+                    $"      (SELECT *" +
+                    $"      FROM \"{_dBtables[i]}\"" +
+                    $"       WHERE samaccountname = '{samaccountname}') = TRUE" +
+                    $"   )" +
+                    $"AND" +
+                    $"   (" +
+                    $"   SELECT \"isEnable\"" +
+                    $"   FROM  \"{_dBtables[i]}\"" +
+                    $"   WHERE samaccountname ='{samaccountname}') = TRUE" +
+                    $"  )" +
+                    $"THEN 'exist'" +
+                    $"ELSE 'NOT exist'" +
+                    $"END;");
 
                     npgsqlCommand.CommandText = command;
 
@@ -210,26 +196,24 @@ namespace TitleProcessing
 
                     DataTable isAccessExist = new DataTable();
                     isAccessExist.Load(data);
-                    //data.Rows
+
                     if ((string)isAccessExist.Rows[0].ItemArray[0] == "exist")
                     {
-                        systemsWithAccess += _DBtables[i] + ", ";
+                        systemsWithAccess += _dBtables[i] + ", ";
                     }
 
                     data.Close();
                 }
 
                 usersTbl[j] = usersTbl[j] + ";" + systemsWithAccess;
-            }                     
+            }
         }
 
-
-
         /// <summary>
-        /// Print result of query to console
+        /// Print result of query to console.
         /// </summary>
         /// <param name="npgsqlCommand">
-        /// SQL-query
+        /// SQL-query.
         /// </param>
         public void PrintResultSet(NpgsqlCommand npgsqlCommand)
         {
@@ -241,7 +225,6 @@ namespace TitleProcessing
                 Console.WriteLine($"{reader.GetString(0)}\t" +
                     $"{reader.GetString(1)}");
             }
-
         }
 
         #endregion METHODS

@@ -6,7 +6,6 @@
 // Project: TitleProcessing
 //////////////////////////////////////////
 
-
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Mail;
@@ -17,12 +16,12 @@ namespace TitleProcessing
     {
         #region COSNTANTS
 
-        const string FROM_ADDRESS   = "ReportSender@comfy.ua";
-        const string TO_ADDRESS     = "TymoshchukMN@comfy.ua";
-        const string MAIL_SERVER    = "172.16.5.8";
-        const string FROM_PASSWORD  = "pnIioQRN";
-        const string MAIL_SUBJECT   = "Changed Titles Report";
-        const ushort PORT           = 465;
+        const string FromAddress = "ReportSender@comfy.ua";
+        const string ToAddress = "TymoshchukMN@comfy.ua";
+        const string MailServer = "172.16.5.8";
+        const string FromPass = "pnIioQRN";
+        const string MailSubject = "Changed Titles Report";
+        const ushort Port = 465;
 
         #endregion COSNTANTS
 
@@ -62,30 +61,27 @@ namespace TitleProcessing
 
         #endregion FIELDS
 
-
         #region CTORs
 
         public Email()
         {
-            _fromAddress = new MailAddress(FROM_ADDRESS);
-            _toAddress = new MailAddress(TO_ADDRESS);
+            _fromAddress = new MailAddress(FromAddress);
+            _toAddress = new MailAddress(ToAddress);
             _smtp = new SmtpClient
             {
-                Host = MAIL_SERVER,
-                Port = PORT,
+                Host = MailServer,
+                Port = Port,
                 EnableSsl = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(_fromAddress.Address, FROM_PASSWORD)
+                Credentials =
+                    new NetworkCredential(_fromAddress.Address, FromPass),
             };
         }
 
         #endregion CTORs
 
-        /// <summary>
-        /// destructor
-        /// </summary>
-        ~Email() 
+        ~Email()
         {
             _smtp.Dispose();
         }
@@ -93,10 +89,10 @@ namespace TitleProcessing
         #region METHODS
 
         /// <summary>
-        /// Send en email
+        /// Send en email.
         /// </summary>
         /// <param name="body">
-        /// Body message
+        /// Body message.
         /// </param>
         public void SendMail(string body)
         {
@@ -104,24 +100,23 @@ namespace TitleProcessing
             (
                 MailMessage message = new MailMessage(_fromAddress, _toAddress)
                 {
-                    Subject = MAIL_SUBJECT,
+                    Subject = MailSubject,
                     Body = body,
-                    IsBodyHtml = true
-                }
-            )
+                    IsBodyHtml = true,
+                })
             {
                 _smtp.Send(message);
-                
             }
         }
 
         /// <summary>
-        /// Processing mai;
+        /// Processing mai.
         /// </summary>
-        /// <param name="userWithChangedTitles"></param>
-        public void ProcessEmailBody(string []usersTbl)
+        /// <param name="usersTbl">
+        /// Table with users.
+        /// </param>
+        public void ProcessEmailBody(string[] usersTbl)
         {
-
             for (int i = 0; i < usersTbl.Length; i++)
             {
                 string sasAMAccountName = usersTbl[i].Split(';')[0];
@@ -130,13 +125,13 @@ namespace TitleProcessing
                 string systems = usersTbl[i].Split(';')[3];
 
                 string row = string.Format(
-                    @"
-                        <tr style='font-size:12px;background-color:#FFFFFF'>
-                            <td>{0}</td>
-                            <td>{1}</td>
-                            <td>{2}</td>
-                            <td>{3}</td>
-                        </tr > ", sasAMAccountName, newTitle, oldTitle, systems);
+                    $"" +
+                    $"<tr style='font-size:12px;background-color:#FFFFFF'>" +
+                    $"  <td>{sasAMAccountName}</td>" +
+                    $"  <td>{newTitle}</td>" +
+                    $"  <td>{oldTitle}</td>" +
+                    $"  <td>{systems}</td>" +
+                    $"</tr > ");
 
                 _body += row;
             }
