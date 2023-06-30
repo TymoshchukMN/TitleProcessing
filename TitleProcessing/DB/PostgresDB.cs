@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Npgsql;
+using TitleProcessing.DB;
 
 namespace TitleProcessing
 {
@@ -160,11 +161,12 @@ namespace TitleProcessing
                 0,
                 usersTbl[0].IndexOf(";"));
 
+            VerifiableDB verifiableDB = VerifiableDB.GetInstance();
             for (int j = 0; j < usersTbl.Length; j++)
             {
                 string systemsWithAccess = string.Empty;
 
-                for (ushort i = 0; i < _dBtables.Length; ++i)
+                for (ushort i = 0; i < verifiableDB.VerifiableDBValue.Length; ++i)
                 {
                     string command = string.Format(
                     $"SELECT CASE" +
@@ -172,13 +174,13 @@ namespace TitleProcessing
                     $"(" +
                     $"  (SELECT EXISTS" +
                     $"      (SELECT *" +
-                    $"      FROM \"{_dBtables[i]}\"" +
+                    $"      FROM \"{verifiableDB.VerifiableDBValue[i]}\"" +
                     $"       WHERE samaccountname = '{samaccountname}') = TRUE" +
                     $"   )" +
                     $"AND" +
                     $"   (" +
                     $"   SELECT \"isEnable\"" +
-                    $"   FROM  \"{_dBtables[i]}\"" +
+                    $"   FROM  \"{verifiableDB.VerifiableDBValue[i]}\"" +
                     $"   WHERE samaccountname ='{samaccountname}') = TRUE" +
                     $"  )" +
                     $"THEN 'exist'" +
@@ -194,11 +196,48 @@ namespace TitleProcessing
 
                     if ((string)isAccessExist.Rows[0].ItemArray[0] == "exist")
                     {
-                        systemsWithAccess += _dBtables[i] + ", ";
+                        systemsWithAccess += verifiableDB.VerifiableDBValue[i] + ", ";
                     }
 
                     data.Close();
                 }
+
+
+                //for (ushort i = 0; i < _dBtables.Length; ++i)
+                //{
+                //    string command = string.Format(
+                //    $"SELECT CASE" +
+                //    $"WHEN" +
+                //    $"(" +
+                //    $"  (SELECT EXISTS" +
+                //    $"      (SELECT *" +
+                //    $"      FROM \"{_dBtables[i]}\"" +
+                //    $"       WHERE samaccountname = '{samaccountname}') = TRUE" +
+                //    $"   )" +
+                //    $"AND" +
+                //    $"   (" +
+                //    $"   SELECT \"isEnable\"" +
+                //    $"   FROM  \"{_dBtables[i]}\"" +
+                //    $"   WHERE samaccountname ='{samaccountname}') = TRUE" +
+                //    $"  )" +
+                //    $"THEN 'exist'" +
+                //    $"ELSE 'NOT exist'" +
+                //    $"END;");
+
+                //    npgsqlCommand.CommandText = command;
+
+                //    data = npgsqlCommand.ExecuteReader();
+
+                //    DataTable isAccessExist = new DataTable();
+                //    isAccessExist.Load(data);
+
+                //    if ((string)isAccessExist.Rows[0].ItemArray[0] == "exist")
+                //    {
+                //        systemsWithAccess += _dBtables[i] + ", ";
+                //    }
+
+                //    data.Close();
+                //}
 
                 usersTbl[j] = usersTbl[j] + ";" + systemsWithAccess;
             }
