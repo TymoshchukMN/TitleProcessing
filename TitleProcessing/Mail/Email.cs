@@ -7,6 +7,7 @@
 //////////////////////////////////////////
 
 using System.Collections.Generic;
+using System.IO.Packaging;
 using System.Net;
 using System.Net.Mail;
 
@@ -16,12 +17,7 @@ namespace TitleProcessing
     {
         #region COSNTANTS
 
-        const string FromAddress = "ReportSender@comfy.ua";
-        const string ToAddress = "TymoshchukMN@comfy.ua";
-        const string MailServer = "172.16.5.8";
-        const string FromPass = "pnIioQRN";
         const string MailSubject = "Changed Titles Report";
-        const ushort Port = 465;
 
         #endregion COSNTANTS
 
@@ -63,19 +59,24 @@ namespace TitleProcessing
 
         #region CTORs
 
-        public Email()
+        public Email(
+            string fromddress,
+            string toAddress,
+            string mailServer,
+            string fromPass,
+            int port)
         {
-            _fromAddress = new MailAddress(FromAddress);
-            _toAddress = new MailAddress(ToAddress);
+            _fromAddress = new MailAddress(fromddress);
+            _toAddress = new MailAddress(toAddress);
             _smtp = new SmtpClient
             {
-                Host = MailServer,
-                Port = Port,
+                Host = mailServer,
+                Port = port,
                 EnableSsl = false,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
                 Credentials =
-                    new NetworkCredential(_fromAddress.Address, FromPass),
+                    new NetworkCredential(fromddress, fromPass),
             };
         }
 

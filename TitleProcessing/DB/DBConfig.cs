@@ -10,10 +10,10 @@ namespace TitleProcessing.DB
     {
         public string Server { get; set; }
 
-        public ushort Port { get; set; }
+        public int Port { get; set; }
 
-        public ushort DBname { get; set; }
+        public string DBname { get; set; }
 
-        public ushort UsetName { get; set; }
+        public string UserName { get; set; }
     }
 }

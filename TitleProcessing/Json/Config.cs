@@ -5,5 +5,7 @@ namespace TitleProcessing.Json
     public class Config
     {
         public DBConfig DataBaseConfig { get; set; }
+
+        public MailConfig MailConfig { get; set; }
     }
 }

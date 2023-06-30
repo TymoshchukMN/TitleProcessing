@@ -15,11 +15,6 @@ namespace TitleProcessing
 {
     internal class PostgresDB
     {
-        const string Server = "192.168.220.102";
-        const ushort Port = 5432;
-        const string DBname = "Access_list";
-        const string UsetName = "access_mng";
-
         #region FIELDS
 
         private readonly string[] _dBtables =
@@ -35,17 +30,17 @@ namespace TitleProcessing
 
         #region CTORs
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PostgresDB"/> class.
-        /// Default ctor.
-        /// </summary>
-        public PostgresDB()
+        public PostgresDB(
+            string server,
+            string userName,
+            string dataBase,
+            int port)
         {
             _connectionString = string.Format(
-                    $"Server={Server};" +
-                    $"Username={UsetName};" +
-                    $"Database={DBname};" +
-                    $"Port={Port};" +
+                    $"Server={server};" +
+                    $"Username={userName};" +
+                    $"Database={dataBase};" +
+                    $"Port={port};" +
                     $"Password={string.Empty}");
         }
 

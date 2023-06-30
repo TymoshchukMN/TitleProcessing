@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using Newtonsoft.Json;
     using Npgsql;
+    using TitleProcessing.Json;
 
     /// <summary>
     /// Started class.
@@ -17,11 +20,25 @@
             Loging log = new Loging();
 
             log.WriteEvent("Start program..");
-            Console.WriteLine("Start program..");
 
-            PostgresDB pgDB = new PostgresDB();
+            const string ConfFilePath = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs";
+
+            var configFile = File.ReadAllText(ConfFilePath);
+            var configJSON = JsonConvert.DeserializeObject<Config>(configFile);
+
+            PostgresDB pgDB = new PostgresDB(
+                configJSON.DataBaseConfig.Server,
+                configJSON.DataBaseConfig.UserName,
+                configJSON.DataBaseConfig.DBname,
+                configJSON.DataBaseConfig.Port);
+
             LDAP ldap = new LDAP();
-            Email email = new Email();
+            Email email = new Email(
+                configJSON.MailConfig.FromAddress,
+                configJSON.MailConfig.ToAddress,
+                configJSON.MailConfig.MailServer,
+                configJSON.MailConfig.FromPass,
+                configJSON.MailConfig.Port);
 
             List<string> currentTitlesList = new List<string>();
 
