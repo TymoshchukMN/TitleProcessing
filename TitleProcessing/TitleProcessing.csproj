@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DB\DBConfig.cs" />
+    <Compile Include="Encription\Decrypt.cs" />
     <Compile Include="Json\MailConfig.cs" />
     <Compile Include="Mail\Email.cs" />
     <Compile Include="ExeptionEmptyLDAPquery.cs" />

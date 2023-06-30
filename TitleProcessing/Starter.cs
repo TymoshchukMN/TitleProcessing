@@ -24,8 +24,8 @@
 
             const string ConfFilePath = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs";
 
-            var configFile = File.ReadAllText(ConfFilePath);
-            var configJSON = JsonConvert.DeserializeObject<Config>(configFile);
+            string configFile = File.ReadAllText(ConfFilePath);
+            Config configJSON = JsonConvert.DeserializeObject<Config>(configFile);
 
             PostgresDB pgDB = new PostgresDB(
                 configJSON.DataBaseConfig.Server,
