@@ -5,6 +5,7 @@
     using System.IO;
     using Newtonsoft.Json;
     using Npgsql;
+    using TitleProcessing.Encription;
     using TitleProcessing.Json;
 
     /// <summary>
@@ -37,7 +38,7 @@
                 configJSON.MailConfig.FromAddress,
                 configJSON.MailConfig.ToAddress,
                 configJSON.MailConfig.MailServer,
-                configJSON.MailConfig.FromPass,
+                Decrypt.DecryptPass(configJSON.MailConfig.FromPass),
                 configJSON.MailConfig.Port);
 
             List<string> currentTitlesList = new List<string>();
