@@ -13,6 +13,7 @@
             "1C7Shops",
             "1C7Torg",
             "Zoom",
+            "ManageEngine",
         };
 
         private VerifiableDB() { }

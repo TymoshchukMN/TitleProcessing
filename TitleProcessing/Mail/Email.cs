@@ -28,7 +28,7 @@ namespace TitleProcessing
             <p>Titles was chanched for users:<br></p>
 
             <table border='1' align='Left' cellpadding='2' cellspacing='0' style='color:black;font-family:arial,helvetica,sans-serif;text-align:Ledt;'>
-            <tr style = 'font-size:12px;font-weight: normal;background: #FFFFFF;background-color: #32CD32;' >
+            <tr style = 'font-size:12px;font-weight: normal;background: #E673E8;background-color: #32CD32;' >
                 <th align = Center>
                     <b>
                         Login
@@ -127,7 +127,7 @@ namespace TitleProcessing
 
                 string row = string.Format(
                     $"" +
-                    $"<tr style='font-size:12px;background-color:#E673E8'>" +
+                    $"<tr style='font-size:12px;background-color:#FFFFFF'>" +
                     $"  <td>{sasAMAccountName}</td>" +
                     $"  <td>{newTitle}</td>" +
                     $"  <td>{oldTitle}</td>" +
