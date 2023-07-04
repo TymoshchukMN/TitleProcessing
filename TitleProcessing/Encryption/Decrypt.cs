@@ -10,17 +10,10 @@ namespace TitleProcessing.Encription
 {
     public static class Decrypt
     {
-        public static string DecryptPass(string passFile)
-        {
-            return DecryptCipherTextToPlainText(passFile);
-        }
-
-        private static string DecryptCipherTextToPlainText(string file)
+        public static string DecryptCipherTextToPlainText(string cipherText)
         {
             const string KeyPath = "N:\\Personal\\TymoshchukMN\\" +
                 "TitleProcessingConfigs\\SecurityKey.txt";
-            string cipherText
-                = File.ReadAllText(file);
 
             byte[] toEncryptArray = Convert.FromBase64String(cipherText);
             MD5CryptoServiceProvider objMD5CryptoService

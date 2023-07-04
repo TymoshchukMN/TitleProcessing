@@ -28,6 +28,7 @@
             {
                 _instance = new VerifiableDB();
             }
+
             return _instance;
         }
     }

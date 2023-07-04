@@ -37,13 +37,18 @@
                 dbConfigJSON.DBConfig.DBname,
                 dbConfigJSON.DBConfig.Port);
 
+            log.WriteEvent("Created postgres instance ..");
+
             LDAP ldap = new LDAP();
+
             Email email = new Email(
                 mailConfigJSON.MailConfig.FromAddress,
                 mailConfigJSON.MailConfig.ToAddress,
                 mailConfigJSON.MailConfig.MailServer,
-                Decrypt.DecryptPass(mailConfigJSON.MailConfig.FromPass),
+                Decrypt.DecryptCipherTextToPlainText(mailConfigJSON.MailConfig.FromPass),
                 mailConfigJSON.MailConfig.Port);
+
+            log.WriteEvent("Created email instance..");
 
             List<string> currentTitlesList = new List<string>();
 

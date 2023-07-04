@@ -49,8 +49,14 @@ namespace TitleProcessing
             directorySearcher = new DirectorySearcher(directoryEntry);
 
             // 512 -identifier, than account is enabled
-            directorySearcher.Filter = "(&(&(&(&(&(&(objectCategory=user)" +
-                "(userAccountControl=512)(&(Title=*))))))))";
+            //directorySearcher.Filter = "(&(&(&(&(&(&(objectCategory=user)" +
+            //    "(userAccountControl=512)(&(Title=*))))))))";
+
+            directorySearcher.Filter = "(&(&(&(&(&(&(&(&(objectCategory=user)(userAccountControl=512)(!sAMAccountName=**_**)(&(Title=*))))))))))";
+            const int PAGE_SIZE = 1000;
+            directorySearcher.PageSize = PAGE_SIZE;
+            directorySearcher.PropertiesToLoad.Add("samaccountname");
+            directorySearcher.PropertiesToLoad.Add("title");
 
             results = directorySearcher.FindAll();
 
