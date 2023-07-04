@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.DirectoryServices;
+using System.Linq;
 
 namespace TitleProcessing
 {
@@ -48,14 +49,14 @@ namespace TitleProcessing
 
             directorySearcher = new DirectorySearcher(directoryEntry);
 
-            // 512 -identifier, than account is enabled
-            //directorySearcher.Filter = "(&(&(&(&(&(&(objectCategory=user)" +
-            //    "(userAccountControl=512)(&(Title=*))))))))";
+            directorySearcher.Filter = "(&(&(&(&(&(&(&(&(objectCategory=user)" +
+                "(!objectClass=contact)" +
+                "(!((userAccountControl:1.2.840.113556.1.4.803:=2)))" +
+                "(!sAMAccountName=**_**)(&(Title=*))))))))))";
 
-            directorySearcher.Filter = "(&(&(&(&(&(&(&(&(objectCategory=user)(userAccountControl=512)(!sAMAccountName=**_**)(&(Title=*))))))))))";
             const int PAGE_SIZE = 1000;
             directorySearcher.PageSize = PAGE_SIZE;
-            directorySearcher.PropertiesToLoad.Add("samaccountname");
+            directorySearcher.PropertiesToLoad.Add("sAMAccountName");
             directorySearcher.PropertiesToLoad.Add("title");
 
             results = directorySearcher.FindAll();
@@ -67,10 +68,16 @@ namespace TitleProcessing
 
             foreach (SearchResult sr in results)
             {
-                currentTitles.Add(
-                    string.Format(
-                        $"{sr.Properties["sAMAccountName"][0]};" +
-                        $"{sr.Properties["title"][0]}"));
+                if (!sr.Path.Contains("OU=Trash")
+                    && !sr.Path.Contains("OU=HRFutureStaff")
+                    && !sr.Path.Contains("OU=HRMaternity")
+                    && !sr.Path.Contains("OU=HRMobilized"))
+                {
+                    currentTitles.Add(
+                   string.Format(
+                       $"{sr.Properties["sAMAccountName"][0]};" +
+                       $"{sr.Properties["title"][0]}"));
+                }
             }
         }
 
