@@ -127,7 +127,7 @@ namespace TitleProcessing
 
                 string row = string.Format(
                     $"" +
-                    $"<tr style='font-size:12px;background-color:#FFFFFF'>" +
+                    $"<tr style='font-size:12px;background-color:#E673E8'>" +
                     $"  <td>{sasAMAccountName}</td>" +
                     $"  <td>{newTitle}</td>" +
                     $"  <td>{oldTitle}</td>" +
