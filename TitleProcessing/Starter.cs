@@ -22,24 +22,28 @@
 
             log.WriteEvent("Start program..");
 
-            const string ConfFilePath = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs";
+            const string ConfFilePathDB = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs\\DBconfigFile.json";
+            const string ConfFilePathMail = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs\\MailConfigFile.json";
 
-            string configFile = File.ReadAllText(ConfFilePath);
-            Config configJSON = JsonConvert.DeserializeObject<Config>(configFile);
+            string dbConfigFile = File.ReadAllText(ConfFilePathDB);
+            DBConfigJSON dbConfigJSON = JsonConvert.DeserializeObject<DBConfigJSON>(dbConfigFile);
+
+            string mailConfigFile = File.ReadAllText(ConfFilePathMail);
+            MailConfigJSON mailConfigJSON = JsonConvert.DeserializeObject<MailConfigJSON>(mailConfigFile);
 
             PostgresDB pgDB = new PostgresDB(
-                configJSON.DataBaseConfig.Server,
-                configJSON.DataBaseConfig.UserName,
-                configJSON.DataBaseConfig.DBname,
-                configJSON.DataBaseConfig.Port);
+                dbConfigJSON.DBConfig.Server,
+                dbConfigJSON.DBConfig.UserName,
+                dbConfigJSON.DBConfig.DBname,
+                dbConfigJSON.DBConfig.Port);
 
             LDAP ldap = new LDAP();
             Email email = new Email(
-                configJSON.MailConfig.FromAddress,
-                configJSON.MailConfig.ToAddress,
-                configJSON.MailConfig.MailServer,
-                Decrypt.DecryptPass(configJSON.MailConfig.FromPass),
-                configJSON.MailConfig.Port);
+                mailConfigJSON.MailConfig.FromAddress,
+                mailConfigJSON.MailConfig.ToAddress,
+                mailConfigJSON.MailConfig.MailServer,
+                Decrypt.DecryptPass(mailConfigJSON.MailConfig.FromPass),
+                mailConfigJSON.MailConfig.Port);
 
             List<string> currentTitlesList = new List<string>();
 

@@ -18,15 +18,8 @@ namespace TitleProcessing
     {
         #region FIELDS
 
-        private readonly string[] _dBtables =
-        {
-            "1C7Dymerka",
-            "1C7Shops",
-            "1C7Torg",
-            "Zoom",
-        };
-
         private string _connectionString;
+
         #endregion FIELDS
 
         #region CTORs
@@ -201,43 +194,6 @@ namespace TitleProcessing
 
                     data.Close();
                 }
-
-
-                //for (ushort i = 0; i < _dBtables.Length; ++i)
-                //{
-                //    string command = string.Format(
-                //    $"SELECT CASE" +
-                //    $"WHEN" +
-                //    $"(" +
-                //    $"  (SELECT EXISTS" +
-                //    $"      (SELECT *" +
-                //    $"      FROM \"{_dBtables[i]}\"" +
-                //    $"       WHERE samaccountname = '{samaccountname}') = TRUE" +
-                //    $"   )" +
-                //    $"AND" +
-                //    $"   (" +
-                //    $"   SELECT \"isEnable\"" +
-                //    $"   FROM  \"{_dBtables[i]}\"" +
-                //    $"   WHERE samaccountname ='{samaccountname}') = TRUE" +
-                //    $"  )" +
-                //    $"THEN 'exist'" +
-                //    $"ELSE 'NOT exist'" +
-                //    $"END;");
-
-                //    npgsqlCommand.CommandText = command;
-
-                //    data = npgsqlCommand.ExecuteReader();
-
-                //    DataTable isAccessExist = new DataTable();
-                //    isAccessExist.Load(data);
-
-                //    if ((string)isAccessExist.Rows[0].ItemArray[0] == "exist")
-                //    {
-                //        systemsWithAccess += _dBtables[i] + ", ";
-                //    }
-
-                //    data.Close();
-                //}
 
                 usersTbl[j] = usersTbl[j] + ";" + systemsWithAccess;
             }

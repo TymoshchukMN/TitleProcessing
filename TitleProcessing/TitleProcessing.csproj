@@ -141,11 +141,12 @@
   <ItemGroup>
     <Compile Include="DB\DBConfig.cs" />
     <Compile Include="DB\VerifiableDB.cs" />
-    <Compile Include="Encription\Decrypt.cs" />
-    <Compile Include="Json\MailConfig.cs" />
+    <Compile Include="Encryption\Decrypt.cs" />
+    <Compile Include="Json\MailConfigJSON.cs" />
+    <Compile Include="Mail\MailConfig.cs" />
     <Compile Include="Mail\Email.cs" />
     <Compile Include="ExeptionEmptyLDAPquery.cs" />
-    <Compile Include="Json\Config.cs" />
+    <Compile Include="Json\DBConfigJSON.cs" />
     <Compile Include="LDAP.cs" />
     <Compile Include="Loging.cs" />
     <Compile Include="DB\PostgresDB.cs" />

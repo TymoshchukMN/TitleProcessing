@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TitleProcessing.DB
+namespace TitleProcessing.Json
 {
     public class DBConfig
     {
