@@ -162,7 +162,7 @@ namespace TitleProcessing
                 for (ushort i = 0; i < verifiableDB.VerifiableDBValue.Length; ++i)
                 {
                     string command = string.Format(
-                    $"SELECT CASE" +
+                    $"SELECT CASE " +
                     $"WHEN" +
                     $"(" +
                     $"  (SELECT EXISTS" +
