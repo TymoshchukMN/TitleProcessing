@@ -28,7 +28,7 @@ namespace TitleProcessing
             <p>Titles was chanched for users:<br></p>
 
             <table border='1' align='Left' cellpadding='2' cellspacing='0' style='color:black;font-family:arial,helvetica,sans-serif;text-align:Ledt;'>
-            <tr style = 'font-size:12px;font-weight: normal;background: #E673E8;background-color: #32CD32;' >
+            <tr style = 'font-size:12px;font-weight: normal;background: #E673E8;background-color: #E673E8;' >
                 <th align = Center>
                     <b>
                         Login

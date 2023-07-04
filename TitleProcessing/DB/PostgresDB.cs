@@ -189,7 +189,7 @@ namespace TitleProcessing
 
                     if ((string)isAccessExist.Rows[0].ItemArray[0] == "exist")
                     {
-                        systemsWithAccess += verifiableDB.VerifiableDBValue[i] + ", ";
+                        systemsWithAccess += verifiableDB.VerifiableDBValue[i] + "<br>";
                     }
 
                     data.Close();
