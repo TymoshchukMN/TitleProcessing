@@ -15,7 +15,9 @@
             "Zoom",
         };
 
-        private VerifiableDB() { }
+        private VerifiableDB()
+        {
+        }
 
         public string[] VerifiableDBValue
         {

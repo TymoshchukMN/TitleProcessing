@@ -18,10 +18,6 @@
         /// </summary>
         public static void Run()
         {
-            Loging log = new Loging();
-
-            log.WriteEvent("Start program..");
-
             const string ConfFilePathDB = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs\\DBconfigFile.json";
             const string ConfFilePathMail = "N:\\Personal\\TymoshchukMN\\TitleProcessingConfigs\\MailConfigFile.json";
 
@@ -37,8 +33,6 @@
                 dbConfigJSON.DBConfig.DBname,
                 dbConfigJSON.DBConfig.Port);
 
-            log.WriteEvent("Created postgres instance ..");
-
             LDAP ldap = new LDAP();
 
             Email email = new Email(
@@ -47,8 +41,6 @@
                 mailConfigJSON.MailConfig.MailServer,
                 Decrypt.DecryptCipherTextToPlainText(mailConfigJSON.MailConfig.FromPass),
                 mailConfigJSON.MailConfig.Port);
-
-            log.WriteEvent("Created email instance..");
 
             List<string> currentTitlesList = new List<string>();
 
@@ -61,7 +53,6 @@
                 string message = string.Format(
                     $"Error\n{ex.Message}");
 
-                log.WriteEvent(ex.Message);
                 email.SendMail(message);
 
                 return;
@@ -76,17 +67,13 @@
                 }
                 catch (Exception ex)
                 {
-                    log.WriteEvent(ex.Message);
                     string message = string.Format(
                         $"Error. Cannont connect to DB\n{ex.Message}");
 
-                    log.WriteEvent(ex.Message);
                     email.SendMail(message);
 
                     return;
                 }
-
-                log.WriteEvent("Connected do DB");
 
                 NpgsqlDataReader data;
 
@@ -97,7 +84,6 @@
 
                 if (isRowsExist)
                 {
-                    log.WriteEvent("Founded changed Titles");
                     List<string> userWithChangedTitles = new List<string>();
 
                     while (data.Read())
@@ -108,7 +94,6 @@
                             $"{data.GetString(2)}");
 
                         userWithChangedTitles.Add(row);
-                        log.WriteEvent(row);
                     }
 
                     // close data reader. Otherwise we'll get error
@@ -121,13 +106,7 @@
 
                     email.ProcessEmailBody(usersTbl);
                 }
-                else
-                {
-                    log.WriteEvent("No job changes");
-                }
             }
-
-            log.WriteEvent("Finish programm");
         }
     }
 }
