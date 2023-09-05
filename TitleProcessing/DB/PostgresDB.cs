@@ -162,23 +162,23 @@ namespace TitleProcessing
                 for (ushort i = 0; i < verifiableDB.VerifiableDBValue.Length; ++i)
                 {
                     string command = string.Format(
-                    $"SELECT CASE" +
+                    $"SELECT CASE " +
                     $"WHEN" +
                     $"(" +
                     $"  (SELECT EXISTS" +
                     $"      (SELECT *" +
                     $"      FROM \"{verifiableDB.VerifiableDBValue[i]}\"" +
-                    $"       WHERE samaccountname = '{samaccountname}') = TRUE" +
-                    $"   )" +
-                    $"AND" +
+                    $"       WHERE samaccountname = '{samaccountname}') = TRUE " +
+                    $"   ) " +
+                    $" AND " +
                     $"   (" +
                     $"   SELECT \"isEnable\"" +
-                    $"   FROM  \"{verifiableDB.VerifiableDBValue[i]}\"" +
-                    $"   WHERE samaccountname ='{samaccountname}') = TRUE" +
+                    $"   FROM  \"{verifiableDB.VerifiableDBValue[i]}\" " +
+                    $"   WHERE samaccountname ='{samaccountname}') = TRUE " +
                     $"  )" +
-                    $"THEN 'exist'" +
-                    $"ELSE 'NOT exist'" +
-                    $"END;");
+                    $" THEN 'exist' " +
+                    $" ELSE 'NOT exist' " +
+                    $" END;");
 
                     npgsqlCommand.CommandText = command;
 
