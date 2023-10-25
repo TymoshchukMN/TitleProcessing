@@ -150,14 +150,15 @@ namespace TitleProcessing
             NpgsqlCommand npgsqlCommand = connection.CreateCommand();
             NpgsqlDataReader data;
 
-            string samaccountname = usersTbl[0].Substring(
-                0,
-                usersTbl[0].IndexOf(";"));
-
             VerifiableDB verifiableDB = VerifiableDB.GetInstance();
+
+            string systemsWithAccess = string.Empty;
+
             for (int j = 0; j < usersTbl.Length; j++)
             {
-                string systemsWithAccess = string.Empty;
+                string samaccountname = usersTbl[j].Substring(
+                0,
+                usersTbl[0].IndexOf(";"));
 
                 for (ushort i = 0; i < verifiableDB.VerifiableDBValue.Length; ++i)
                 {
@@ -196,6 +197,7 @@ namespace TitleProcessing
                 }
 
                 usersTbl[j] = usersTbl[j] + ";" + systemsWithAccess;
+                systemsWithAccess = string.Empty;
             }
         }
 
